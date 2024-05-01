@@ -8,6 +8,8 @@ import java.util.Stack;
 public class ItemDTO {
     private float vatRate;
     private Amount price;
+    private Amount vatAmount;
+    private Amount totalAmount;
     private String itemIdentifier;
     private String name;
     private String itemDescription;
@@ -20,6 +22,8 @@ public class ItemDTO {
         this.itemIdentifier = itemIdentifier;
         this.name = name;
         this.itemDescription = itemDescription;
+        this.vatAmount=calculateVAT();
+        this.totalAmount=calculateTotal();
     }
 
 
@@ -43,12 +47,28 @@ public class ItemDTO {
         return itemDescription;
     }
 
+    public Amount getVatAmount() {
+        return vatAmount;
+    }
+
+    public Amount getTotalAmount() {
+        return totalAmount;
+    }
+
+    private Amount calculateVAT(){
+        return price.scale(vatRate/SCALE_VAT);
+    }
+
+    private Amount calculateTotal(){
+        return calculateVAT().addition(price);
+    }
+
     @Override
     public String toString(){
         StringBuilder stringBuilder = new StringBuilder();
         stringBuilder.append("Item ID: " + itemIdentifier + "\n");
         stringBuilder.append("Item name: " + name + "\n");
-        stringBuilder.append("Item cost: " + price.addition(price.scale(vatRate/SCALE_VAT)) + "\n");
+        stringBuilder.append("Item cost: " + price.addition(price.scale(vatRate/SCALE_VAT)) +" " + Amount.CURRENCY +"\n");
         stringBuilder.append("VAT: " + (int)(vatRate) + "%\n");
         stringBuilder.append("Item description: " + itemDescription + "\n");
         return stringBuilder.toString();

@@ -74,13 +74,9 @@ public class Sale {
         return saleDTO;
     }
     private void increaseCost(ItemDTO item){
-        Amount itemVAT=calculateVAT(item);
+        Amount itemVAT=item.getVatAmount();
         vatAmount=vatAmount.addition(itemVAT);
-        Amount itemTotalCost=itemVAT.addition(item.getPrice());
+        Amount itemTotalCost=item.getTotalAmount();
         total=total.addition(itemTotalCost);
     }
-    private Amount calculateVAT(ItemDTO item){
-        return item.getPrice().scale(item.getVatRate()/SCALE_VAT);
-    }
-
 }

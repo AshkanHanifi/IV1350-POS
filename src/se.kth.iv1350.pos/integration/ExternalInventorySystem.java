@@ -11,10 +11,16 @@ import java.util.Scanner;
 
 public class ExternalInventorySystem {
     private ArrayList<ItemDTO> database=new ArrayList<>();
-    public ExternalInventorySystem() {
+    ExternalInventorySystem() {
         createItems();
     }
 
+    /**
+     * Return
+     *
+     * @param itemIdentifier
+     * @return
+     */
     public ItemDTO getItemInfo(String itemIdentifier){
         ItemDTO wantedItem=findItem(itemIdentifier);
         return wantedItem;

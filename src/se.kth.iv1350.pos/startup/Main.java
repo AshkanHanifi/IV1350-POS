@@ -11,7 +11,5 @@ public class Main {
         ReceiptPrinter printer=new ReceiptPrinter();
         Controller controller=new Controller(exCreator,printer);
         View view = new View(controller);
-
-        view.fakeAction();
     }
 }

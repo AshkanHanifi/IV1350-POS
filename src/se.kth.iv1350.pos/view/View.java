@@ -11,6 +11,7 @@ public class View {
     private Controller controller;
     public View(Controller controller){
         this.controller=controller;
+        fakeAction();
     }
 
     public void fakeAction(){
@@ -19,23 +20,25 @@ public class View {
         scanItem("abc123");
         scanItem("def456");
         endSale();
-        pay(new Amount(100));
+        Amount change=pay(new Amount(100));
+        System.out.println("Change to give the customer: " + change+" " + Amount.CURRENCY);
     }
 
-    private void pay(Amount amount){
-        System.out.println("Customer pays " +amount + " :");
-        controller.pay(amount);
+    private Amount pay(Amount amount){
+        System.out.println("Customer pays " +amount +" " +Amount.CURRENCY + ":");
+        Amount change=controller.pay(amount);
+        return change;
     }
     private void endSale(){
         System.out.println("End sale:");
-        System.out.println("Total cost (incl VAT): " + controller.endSale());
+        System.out.println("Total cost (incl VAT): " + controller.endSale() +" " +Amount.CURRENCY);
     }
     private void scanItem(String itemIdentifier){
         System.out.println("Add 1 item with item id " + itemIdentifier);
         SaleDTO saleDTO=controller.scanItem(itemIdentifier);
         printItemInfo(saleDTO, itemIdentifier);
-        System.out.println("Total cost (incl VAT): " + saleDTO.getTotal());
-        System.out.println("Total VAT: " + saleDTO.getVatAmount() + "\n");
+        System.out.println("Total cost (incl VAT): " + saleDTO.getTotal() +" " +Amount.CURRENCY);
+        System.out.println("Total VAT: " + saleDTO.getVatAmount()+" " +Amount.CURRENCY +"\n");
     }
     private void printItemInfo(SaleDTO saleDTO, String itemIdentifier){
         Iterator<ItemDTO> iterator = saleDTO.getItems().keySet().iterator();
