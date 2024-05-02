@@ -6,6 +6,11 @@ public class ReceiptPrinter {
     public ReceiptPrinter() {
     }
 
+    /**
+     * Prints out {@link Receipt} to output
+     *
+     * @param receipt the {@link Receipt} to be printed
+     */
     public void PrintReceipt(Receipt receipt){
         System.out.println(receipt);
     }

@@ -16,16 +16,21 @@ public class ExternalInventorySystem {
     }
 
     /**
-     * Return
+     * Returns an {@link ItemDTO} if present in database
      *
-     * @param itemIdentifier
-     * @return
+     * @param itemIdentifier String used to identify item
+     * @return an {@link ItemDTO} of the searched item
      */
     public ItemDTO getItemInfo(String itemIdentifier){
         ItemDTO wantedItem=findItem(itemIdentifier);
         return wantedItem;
     }
 
+    /**
+     * Updates the inventory system
+     *
+     * @param saleDTO a {@link SaleDTO} describing the current sale
+     */
     public void updateInventory(SaleDTO saleDTO){
         HashMap<ItemDTO, Integer> items=saleDTO.getItems();
         for(ItemDTO item : items.keySet()){

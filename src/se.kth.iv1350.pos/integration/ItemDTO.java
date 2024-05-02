@@ -26,31 +26,58 @@ public class ItemDTO {
         this.totalAmount=calculateTotal();
     }
 
-
+    /**
+     *
+     * @return the VAT-rate of the item in percentage, type of <code>float</code>
+     */
     public float getVatRate() {
         return vatRate;
     }
 
+    /**
+     *
+     * @return the VAT-free price, type of {@link Amount}
+     */
     public Amount getPrice() {
         return price;
     }
 
+    /**
+     *
+     * @return the item identifier, type of <code>String</code>
+     */
     public String getItemIdentifier() {
         return itemIdentifier;
     }
 
+    /**
+     *
+     * @return the item name, type of <code>String</code>
+     */
     public String getName() {
         return name;
     }
 
+    /**
+     *
+     * @return the item description, type of <code>String</code>
+     */
     public String getItemDescription() {
         return itemDescription;
     }
 
+    /**
+     *
+     * @return the item VAT-amount, type of {@link Amount}
+     */
     public Amount getVatAmount() {
         return vatAmount;
     }
 
+    /**
+     *
+     * @return the VAT-included price, type of {@link Amount}
+     */
     public Amount getTotalAmount() {
         return totalAmount;
     }

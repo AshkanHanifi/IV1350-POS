@@ -11,9 +11,7 @@ public class Receipt {
     private String timestamp;
     private SaleDTO saleDTO;
     private Amount change;
-
-    private final int PADDING=14;
-
+    
     Receipt(SaleDTO saleDTO, Amount change){
         this.saleDTO=saleDTO;
         this.change=change;

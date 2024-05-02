@@ -9,10 +9,12 @@ public class ExternalAccountingSystem {
 
     /**
      * Logs the sale in a database
+     *
      * @param saleDTO the {@link SaleDTO} describing the paid Sale
      * @param change the {@link Amount} describing the change
      */
     public void logSale(SaleDTO saleDTO, Amount change){
         System.out.println("Sent sale info to external accounting system.");
     }
+
 }
