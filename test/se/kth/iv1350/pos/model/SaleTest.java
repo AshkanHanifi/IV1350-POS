@@ -15,17 +15,20 @@ import java.util.HashMap;
 import static org.junit.jupiter.api.Assertions.*;
 
 class SaleTest {
-    ExternalInventorySystem inventory;
-    ExternalAccountingSystem accountingSystem;
-    Sale saleWith1ItemWithTotal5;
-    Sale saleWithNoItems;
+    private ExternalInventorySystem inventory;
+    private ExternalAccountingSystem accountingSystem;
+    private Sale saleWith1ItemWithTotal5;
+    private Sale saleWithNoItems;
+    private String itemIdentifier;
     @BeforeEach
     void setUp() {
+        itemIdentifier="hij789";
         ExternalSystemCreator externalSystemCreator=new ExternalSystemCreator();
         inventory=externalSystemCreator.getExternalInventorySystem();
+        inventory.addItem(itemIdentifier+";Ice cream;4:00;25;Ice cream 100 g, chocolate flavour, dairy");
         accountingSystem= externalSystemCreator.getExternalAccountingSystem();
         saleWith1ItemWithTotal5=new Sale();
-        ItemDTO item = inventory.getItemInfo("hij789");
+        ItemDTO item = inventory.getItemInfo(itemIdentifier);
         saleWith1ItemWithTotal5.addNewItem(item);
         saleWithNoItems=new Sale();
     }
@@ -39,7 +42,7 @@ class SaleTest {
 
     @Test
     public void testAddingItemToEmptySale(){
-        ItemDTO item = inventory.getItemInfo("hij789");
+        ItemDTO item = inventory.getItemInfo(itemIdentifier);
         SaleDTO updatedSale=saleWithNoItems.addNewItem(item);
         int expResult=1;
         int result=findAmountOfItem(item, updatedSale);
@@ -48,8 +51,8 @@ class SaleTest {
 
     @Test
     public void testAddingAlreadyExistingItem(){
-        ItemDTO item = inventory.getItemInfo("hij789");
-        SaleDTO updatedSale=saleWith1ItemWithTotal5.updateItemQuantity("hij789");
+        ItemDTO item = inventory.getItemInfo(itemIdentifier);
+        SaleDTO updatedSale=saleWith1ItemWithTotal5.updateItemQuantity(itemIdentifier);
         int expResult=2;
         int result=findAmountOfItem(item, updatedSale);
         assertEquals(expResult, result, "Quantity of item incorrect");
@@ -57,7 +60,7 @@ class SaleTest {
 
     @Test
     public void testAddingIncrementingTotal(){
-        ItemDTO item = inventory.getItemInfo("hij789");
+        ItemDTO item = inventory.getItemInfo(itemIdentifier);
         SaleDTO updatedSale=saleWithNoItems.addNewItem(item);
         Amount expResult= new Amount(5);
         Amount result=updatedSale.getTotal();
@@ -65,7 +68,7 @@ class SaleTest {
     }
     @Test
     public void testAddingIncrementingVAT(){
-        ItemDTO item = inventory.getItemInfo("hij789");
+        ItemDTO item = inventory.getItemInfo(itemIdentifier);
         SaleDTO updatedSale=saleWithNoItems.addNewItem(item);
         Amount expResult= new Amount(1);
         Amount result=updatedSale.getVatAmount();
@@ -93,14 +96,14 @@ class SaleTest {
     @Test
     public void testIfPreviouslyScannedWhenScanned(){
         boolean expResult=true;
-        boolean result=saleWith1ItemWithTotal5.previouslyScanned("hij789");
+        boolean result=saleWith1ItemWithTotal5.previouslyScanned(itemIdentifier);
         assertEquals(expResult, result, "Item has been previously scanned");
     }
 
     @Test
     public void testIfPreviouslyScannedWhenNotScanned(){
         boolean expResult=false;
-        boolean result=saleWithNoItems.previouslyScanned("hij789");
+        boolean result=saleWithNoItems.previouslyScanned(itemIdentifier);
         assertEquals(expResult, result, "Item has not been previously scanned");
     }
 

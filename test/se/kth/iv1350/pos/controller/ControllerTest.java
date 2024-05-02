@@ -20,17 +20,20 @@ class ControllerTest {
     private Controller controllerWithEmptySale;
     private Controller controllerWithSaleTotalling5;
     private ItemDTO itemCosting5;
+    private String itemIdentifier;
     @BeforeEach
     void setUp() {
         ExternalSystemCreator externalSystemCreator=new ExternalSystemCreator();
         ExternalInventorySystem inventory = externalSystemCreator.getExternalInventorySystem();
-        itemCosting5=inventory.getItemInfo("hij789");
+        itemIdentifier="hij789";
+        inventory.addItem(itemIdentifier+";Ice cream;4:00;25;Ice cream 100 g, chocolate flavour, dairy");
+        itemCosting5=inventory.getItemInfo(itemIdentifier);
         ReceiptPrinter printer=new ReceiptPrinter();
         controllerWithEmptySale=new Controller(externalSystemCreator, printer);
         controllerWithEmptySale.startSale();
         controllerWithSaleTotalling5=new Controller(externalSystemCreator,printer);
         controllerWithSaleTotalling5.startSale();
-        controllerWithSaleTotalling5.scanItem("hij789");
+        controllerWithSaleTotalling5.scanItem(itemIdentifier);
     }
 
     @AfterEach
@@ -41,7 +44,7 @@ class ControllerTest {
 
     @Test
     void testScanningNotScannedItem() {
-        SaleDTO updatedSale=controllerWithEmptySale.scanItem("hij789");
+        SaleDTO updatedSale=controllerWithEmptySale.scanItem(itemIdentifier);
         int expResult=1;
         int result=findAmountOfItem(itemCosting5, updatedSale);
         assertEquals(expResult, result, "Item quantity not increased correctly");
@@ -49,7 +52,7 @@ class ControllerTest {
 
     @Test
     void testScanningAlreadyScannedItem() {
-        SaleDTO updatedSale=controllerWithSaleTotalling5.scanItem("hij789");
+        SaleDTO updatedSale=controllerWithSaleTotalling5.scanItem(itemIdentifier);
         int expResult=2;
         int result=findAmountOfItem(itemCosting5, updatedSale);
         assertEquals(expResult, result, "Item quantity not increased correctly");
@@ -57,7 +60,7 @@ class ControllerTest {
 
     @Test
     void testScanningIncrementingTotal() {
-        SaleDTO updatedSale=controllerWithEmptySale.scanItem("hij789");
+        SaleDTO updatedSale=controllerWithEmptySale.scanItem(itemIdentifier);
         Amount expResult=new Amount(5);
         Amount result=updatedSale.getTotal();
         assertEquals(expResult, result, "Sale total not increased correctly");
@@ -65,7 +68,7 @@ class ControllerTest {
 
     @Test
     void testScanningIncrementingVAT() {
-        SaleDTO updatedSale=controllerWithEmptySale.scanItem("hij789");
+        SaleDTO updatedSale=controllerWithEmptySale.scanItem(itemIdentifier);
         Amount expResult=new Amount(1);
         Amount result=updatedSale.getVatAmount();
         assertEquals(expResult, result, "Sale total not increased correctly");

@@ -8,9 +8,12 @@ import static org.junit.jupiter.api.Assertions.*;
 
 class ExternalInventorySystemTest {
     private ExternalInventorySystem inventorySystem;
+    private String itemIdentifier;
     @BeforeEach
     void setUp() {
+        itemIdentifier="hij789";
         inventorySystem=new ExternalInventorySystem();
+        inventorySystem.addItem(itemIdentifier+";Ice cream;4:00;25;Ice cream 100 g, chocolate flavour, dairy");
     }
 
     @AfterEach
@@ -20,9 +23,8 @@ class ExternalInventorySystemTest {
 
     @Test
     void testGetItemInfoWhenItemExists() {
-        String searchedItemIdentifier="def456";
-        String expResult=searchedItemIdentifier;
-        ItemDTO searchedItem=inventorySystem.getItemInfo(searchedItemIdentifier);
+        String expResult=itemIdentifier;
+        ItemDTO searchedItem=inventorySystem.getItemInfo(itemIdentifier);
         assertEquals(expResult, searchedItem.getItemIdentifier(),
                 "wrong or no item was found");
     }
