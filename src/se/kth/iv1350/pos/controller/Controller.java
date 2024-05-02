@@ -35,6 +35,7 @@ public class Controller {
         this.printer = printer;
         this.inventory = exCreator.getExternalInventorySystem();
         this.accounting = exCreator.getExternalAccountingSystem();
+        this.register=new Register();
     }
 
     /**
@@ -65,7 +66,7 @@ public class Controller {
         Payment payment = new Payment(paidAmount);
         Amount change = sale.pay(payment, inventory, accounting);
         sale.printReceipt(change, printer);
-        //register.updateRegister(Payment);
+        register.updateRegister(paidAmount, change);
         return change;
     }
 

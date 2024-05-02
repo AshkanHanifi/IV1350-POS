@@ -30,7 +30,7 @@ public class Receipt {
         HashMap<ItemDTO, Integer> items = saleDTO.getItems();
         for (ItemDTO item : items.keySet()) {
             int itemAmount = items.get(item);
-            String formatted = String.format("%-40s %12d x %s %10s %s\n",
+            String formatted = String.format("%-40s %12d x %-10s %10s %8s\n",
                     item.getName(), itemAmount, item.getTotalAmount(), item.getTotalAmount().scale(itemAmount), Amount.CURRENCY);
             stringBuilder.append(formatted);
         }
@@ -46,10 +46,10 @@ public class Receipt {
         stringBuilder.append("- - - - - - - - - - - - - - - - - - Begin receipt - - - - - - - - - - - - - - - - - - -\n");
         stringBuilder.append("Time of sale: " + timestamp + "\n\n");
         addItemsToReceipt(stringBuilder);
-        stringBuilder.append(String.format("%-66s %s %s\n", "Total:", saleDTO.getTotal(), Amount.CURRENCY));
+        stringBuilder.append(String.format("%-66s %10s %8s\n", "Total:", saleDTO.getTotal(), Amount.CURRENCY));
         stringBuilder.append("VAT: " + saleDTO.getVatAmount() + "\n");
-        stringBuilder.append(String.format("%-66s %s %s\n", "Cash:", saleDTO.getTotal().addition(change), Amount.CURRENCY));
-        stringBuilder.append(String.format("%-66s %s %s\n", "Change:", change, Amount.CURRENCY));
+        stringBuilder.append(String.format("%-66s %10s %8s\n", "Cash:", saleDTO.getTotal().addition(change), Amount.CURRENCY));
+        stringBuilder.append(String.format("%-66s %10s %8s\n", "Change:", change, Amount.CURRENCY));
         stringBuilder.append("- - - - - - - - - - - - - - - - - - End receipt - - - - - - - - - - - - - - - - - - - -\n");
         return stringBuilder.toString();
     }
