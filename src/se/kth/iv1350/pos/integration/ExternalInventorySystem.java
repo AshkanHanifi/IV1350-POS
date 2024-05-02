@@ -2,12 +2,9 @@ package se.kth.iv1350.pos.integration;
 
 import se.kth.iv1350.pos.model.SaleDTO;
 import se.kth.iv1350.pos.util.Amount;
-
-import java.io.File;
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.Scanner;
+
 
 /**
  * This class represents the external inventory system of a point of sale
@@ -16,8 +13,9 @@ public class ExternalInventorySystem {
     private ArrayList<ItemDTO> database = new ArrayList<>();
 
     ExternalInventorySystem() {
-        createItems();
+        setupItems();
     }
+
 
     /**
      * Returns an {@link ItemDTO} if present in database
@@ -43,21 +41,11 @@ public class ExternalInventorySystem {
         }
     }
 
-    private void createItems() {
-        //ItemDTO item1=new ItemDTO("abc123", "")
-        try {
-            File itemFile = new File("items.txt");
-            Scanner fileReader = new Scanner(itemFile);
-            while (fileReader.hasNext()) {
-                String line = fileReader.nextLine();
-                line = line.replace(":", ".");
-                String[] args = line.split(";");
+    public void addItem(String itemString) {
+                String item = itemString.replace(":", ".");
+                String[] args = item.split(";");
                 database.add(new ItemDTO(args[0], args[1], new Amount(Float.valueOf(args[2])), Float.valueOf(args[3]), args[4]));
-            }
-        } catch (IOException e) {
-            e.printStackTrace();
         }
-    }
 
     private ItemDTO findItem(String itemIdentifier) {
         for (ItemDTO item : database) {
@@ -67,5 +55,11 @@ public class ExternalInventorySystem {
         }
         return null;
 
+    }
+
+    private void setupItems(){
+        addItem("abc123;BigWheel Oatmeal;28:208;6;BigWheel Oatmeal 500 ml, whole grain oats, high fiber, gluten free");
+        addItem("def456;YouGoGo Blueberry;14:90;6;YouGoGo Blueberry 240 g, low sugar youghurt, blueberry flavour");
+        addItem("q1;Ice cream;4:00;25;Ice cream 100 g, chocolate flavour, dairy");
     }
 }

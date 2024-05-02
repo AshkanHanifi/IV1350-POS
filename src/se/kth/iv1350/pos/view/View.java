@@ -29,6 +29,7 @@ public class View {
         controller.startSale();
         scanItem("abc123");
         scanItem("abc123");
+        scanItem("q1");
         scanItem("def456");
         endSale();
         Amount change = pay(new Amount(100));
