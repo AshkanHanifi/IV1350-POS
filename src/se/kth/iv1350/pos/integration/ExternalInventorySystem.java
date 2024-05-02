@@ -64,7 +64,7 @@ public class ExternalInventorySystem {
 
     private void setupItems() {
         addItem("abc123;BigWheel Oatmeal;28:208;6;BigWheel Oatmeal 500 ml, whole grain oats, high fiber, gluten free");
-        addItem("def456;YouGoGo Blueberry;14:90;6;YouGoGo Blueberry 240 g, low sugar youghurt, blueberry flavour");
+        addItem("def456;YouGoGo Blueberry;14:06;6;YouGoGo Blueberry 240 g, low sugar youghurt, blueberry flavour");
         addItem("q1;Ice cream;4:00;25;Ice cream 100 g, chocolate flavour, dairy");
     }
 }
