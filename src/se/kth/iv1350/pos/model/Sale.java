@@ -17,7 +17,6 @@ public class Sale {
     private Amount total = new Amount(0);
     private Amount vatAmount = new Amount(0);
     private boolean closedSale = false;
-    private final int SCALE_VAT = 100;
 
     /**
      * Creates a new instance, representing a sale

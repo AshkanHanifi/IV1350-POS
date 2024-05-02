@@ -14,6 +14,12 @@ public class Receipt {
     private SaleDTO saleDTO;
     private Amount change;
 
+    /**
+     * Creates a new instance, describes a receipt
+     * 
+     * @param saleDTO the {@link SaleDTO} of the paid sale
+     * @param change the {@link Amount} to be returned as change
+     */
     Receipt(SaleDTO saleDTO, Amount change) {
         this.saleDTO = saleDTO;
         this.change = change;

@@ -18,6 +18,15 @@ public class ItemDTO {
     private String itemDescription;
     private final int SCALE_VAT = 100;
 
+    /**
+     * Creates a new instance, describes and item
+     * 
+     * @param itemIdentifier the <code>String</code> used to identify an item
+     * @param name the name of the item
+     * @param price the cost of an item, described by {@link Amount}
+     * @param vatRate the VAT-rate of an item, 6 instead of 0.06 to represent 6%
+     * @param itemDescription the description of an item
+     */
 
     ItemDTO(String itemIdentifier, String name, Amount price, float vatRate, String itemDescription) {
         this.vatRate = vatRate;

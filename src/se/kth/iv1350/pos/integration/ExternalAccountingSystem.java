@@ -7,6 +7,9 @@ import se.kth.iv1350.pos.util.Amount;
  * This class represents the external accounting system of a point of sale
  */
 public class ExternalAccountingSystem {
+    /**
+     * Creates a new instance, represents an external accounting system
+     */
     ExternalAccountingSystem() {
     }
 

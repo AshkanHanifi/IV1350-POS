@@ -11,6 +11,9 @@ import java.util.HashMap;
 public class ExternalInventorySystem {
     private ArrayList<ItemDTO> database = new ArrayList<>();
 
+    /**
+     * Creates a new instance, represents an external inventory system
+     */
     ExternalInventorySystem() {
         setupItems();
     }
