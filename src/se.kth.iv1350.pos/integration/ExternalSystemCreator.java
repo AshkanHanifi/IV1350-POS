@@ -1,7 +1,10 @@
 package se.kth.iv1350.pos.integration;
 
+/**
+ * This class represents a creator for the external systems of a point of sale.
+ */
 public class ExternalSystemCreator {
-    private  ExternalAccountingSystem accounting;
+    private ExternalAccountingSystem accounting;
     private ExternalInventorySystem inventory;
 
     /**
@@ -26,7 +29,7 @@ public class ExternalSystemCreator {
      * Creates a new instance, creates all external systems
      */
     public ExternalSystemCreator() {
-        this.accounting= new ExternalAccountingSystem();
-        this.inventory= new ExternalInventorySystem();
+        this.accounting = new ExternalAccountingSystem();
+        this.inventory = new ExternalInventorySystem();
     }
 }

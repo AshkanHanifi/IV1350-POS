@@ -7,9 +7,9 @@ import se.kth.iv1350.pos.view.View;
 
 public class Main {
     public static void main(String[] args) {
-        ExternalSystemCreator exCreator=new ExternalSystemCreator();
-        ReceiptPrinter printer=new ReceiptPrinter();
-        Controller controller=new Controller(exCreator,printer);
+        ExternalSystemCreator exCreator = new ExternalSystemCreator();
+        ReceiptPrinter printer = new ReceiptPrinter();
+        Controller controller = new Controller(exCreator, printer);
         View view = new View(controller);
     }
 }
