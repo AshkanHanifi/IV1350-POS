@@ -5,7 +5,6 @@ import se.kth.iv1350.pos.integration.ExternalSystemCreator;
 import se.kth.iv1350.pos.integration.InventorySystemException;
 import se.kth.iv1350.pos.integration.ExternalInventorySystem;
 
-import java.io.IOException;
 import java.util.ArrayList;
 
 import se.kth.iv1350.pos.integration.ExternalAccountingSystem;
@@ -40,9 +39,8 @@ public class Controller {
      *
      * @param exCreator the {@link ExternalSystemCreator} in charge of creating the external systems
      * @param printer   the {@link ReceiptPrinter} used for printing receipts
-     * @throws IOException 
      */
-    public Controller(ExternalSystemCreator exCreator, ReceiptPrinter printer) throws IOException {
+    public Controller(ExternalSystemCreator exCreator, ReceiptPrinter printer){
         this.printer = printer;
         this.inventory = exCreator.getExternalInventorySystem();
         this.accounting = exCreator.getExternalAccountingSystem();
