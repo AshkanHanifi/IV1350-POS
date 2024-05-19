@@ -3,18 +3,28 @@ package se.kth.iv1350.pos.integration;
 import se.kth.iv1350.pos.model.SaleDTO;
 import se.kth.iv1350.pos.util.Amount;
 import java.util.ArrayList;
-import java.util.HashMap;
+import java.util.Map;
 
 /**
- * This class represents the external inventory system of a point of sale
+ * A singleton that represents the external inventory system of a point of sale
  */
 public class ExternalInventorySystem {
+private static final ExternalInventorySystem externalInventorySystem = new ExternalInventorySystem();
+
     private ArrayList<ItemDTO> database = new ArrayList<>();
+
+    /**
+     * 
+     * @return the instance of this singleton
+     */
+    public static ExternalInventorySystem getInstance(){
+        return externalInventorySystem;
+    }
 
     /**
      * Creates a new instance, represents an external inventory system
      */
-    ExternalInventorySystem() {
+    private ExternalInventorySystem() {
         setupItems();
     }
 
@@ -23,8 +33,12 @@ public class ExternalInventorySystem {
      *
      * @param itemIdentifier String used to identify item
      * @return an {@link ItemDTO} of the searched item
+     * @throws InventorySystemException when connection to server fails
      */
-    public ItemDTO getItemInfo(String itemIdentifier) {
+    public ItemDTO getItemInfo(String itemIdentifier){
+        if(itemIdentifier.equals("error")){
+            throw new InventorySystemException("Server connection failure");
+        }
         ItemDTO wantedItem = findItem(itemIdentifier);
         return wantedItem;
     }
@@ -35,7 +49,7 @@ public class ExternalInventorySystem {
      * @param saleDTO a {@link SaleDTO} describing the current sale
      */
     public void updateInventory(SaleDTO saleDTO) {
-        HashMap<ItemDTO, Integer> items = saleDTO.getItems();
+        Map<ItemDTO, Integer> items = saleDTO.getItems();
         for (ItemDTO item : items.keySet()) {
             System.out.println("Told external inventory system to decrease inventory quantity of item " +
                     item.getItemIdentifier() + " by " + items.get(item) + " units");
@@ -62,12 +76,11 @@ public class ExternalInventorySystem {
             }
         }
         return null;
-
     }
 
     private void setupItems() {
-        addItem("abc123;BigWheel Oatmeal;28:208;6;BigWheel Oatmeal 500 ml, whole grain oats, high fiber, gluten free");
-        addItem("def456;YouGoGo Blueberry;14:06;6;YouGoGo Blueberry 240 g, low sugar youghurt, blueberry flavour");
+        addItem("abc123;BigWheel Oatmeal;20:00;25;BigWheel Oatmeal 500 ml, whole grain oats, high fiber, gluten free");
+        addItem("def456;YouGoGo Blueberry;10:00;25;YouGoGo Blueberry 240 g, low sugar youghurt, blueberry flavour");
         addItem("q1;Ice cream;4:00;25;Ice cream 100 g, chocolate flavour, dairy");
     }
 }

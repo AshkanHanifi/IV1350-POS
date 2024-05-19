@@ -9,13 +9,13 @@ import java.util.Objects;
  * This class represents the data transfer object of an item
  */
 public class ItemDTO {
-    private float vatRate;
-    private Amount price;
-    private Amount vatAmount;
-    private Amount totalAmount;
-    private String itemIdentifier;
-    private String name;
-    private String itemDescription;
+    private final float vatRate;
+    private final Amount price;
+    private final Amount vatAmount;
+    private final Amount totalAmount;
+    private final String itemIdentifier;
+    private final String name;
+    private final String itemDescription;
     private final int SCALE_VAT = 100;
 
     /**
@@ -85,6 +85,10 @@ public class ItemDTO {
      */
     public Amount getTotalAmount() {
         return totalAmount;
+    }
+
+    public int getScaleVat(){
+        return SCALE_VAT;
     }
 
     private Amount calculateVAT() {

@@ -12,7 +12,7 @@ class ExternalInventorySystemTest {
     @BeforeEach
     void setUp() {
         itemIdentifier="hij789";
-        inventorySystem=new ExternalInventorySystem();
+        inventorySystem=ExternalInventorySystem.getInstance();
         inventorySystem.addItem(itemIdentifier+";Ice cream;4:00;25;Ice cream 100 g, chocolate flavour, dairy");
     }
 

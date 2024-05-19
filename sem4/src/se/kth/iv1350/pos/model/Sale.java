@@ -6,8 +6,10 @@ import se.kth.iv1350.pos.integration.ItemDTO;
 import se.kth.iv1350.pos.integration.ReceiptPrinter;
 import se.kth.iv1350.pos.util.Amount;
 
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.Iterator;
+import java.util.Map;
 
 /**
  * This class represents the sale occurring at a point of sale
@@ -17,6 +19,7 @@ public class Sale {
     private Amount total = new Amount(0);
     private Amount vatAmount = new Amount(0);
     private boolean closedSale = false;
+    private Receipt receiptType;
 
     /**
      * Creates a new instance, representing a sale
@@ -25,24 +28,37 @@ public class Sale {
         items = new HashMap<>();
     }
 
+
     /**
-     * Adds a new item to the sale
-     * @param item an {@link ItemDTO} of the item to be added
-     * @return a {@link SaleDTO} of the updated sale
+     * Adds the Item identified by the <code>itemIdentifier</code> to the {@link Sale}
+     *
+     * @param itemIdentifier the String used to identify an item
+     * @param inventory a referens to a {@link ExternalInventorySystem}
+     * @return a {@link SaleDTO} describing the sale
+     * @throws NoSuchItemException when no item with given <code>itemIdentifier</code> exists
      */
-    public SaleDTO addNewItem(ItemDTO item) {
+    public SaleDTO scanItem(String itemIdentifier, ExternalInventorySystem inventory) throws NoSuchItemException{
+        boolean scanned = previouslyScanned(itemIdentifier);
+        SaleDTO saleDTO;
+        if (scanned) {
+            saleDTO = updateItemQuantity(itemIdentifier);
+        } else {
+            ItemDTO item = inventory.getItemInfo(itemIdentifier);
+            if(item==null){
+                throw new NoSuchItemException(itemIdentifier);
+            }
+            saleDTO = addNewItem(item);
+        }
+        return saleDTO;
+    }
+
+    private SaleDTO addNewItem(ItemDTO item) {
         items.put(item, 1);
         increaseCost(item);
         return createSaleDTO();
     }
 
-    /**
-     * Updates the quantity an existing item
-     * @param itemIdentifier the identifier of the item to be added
-     * @return a {@link SaleDTO} of the updated sale
-     */
-
-    public SaleDTO updateItemQuantity(String itemIdentifier) {
+    private SaleDTO updateItemQuantity(String itemIdentifier) {
         ItemDTO wantedItem = findInScannedItems(itemIdentifier);
         int currentQuantity = items.get(wantedItem);
         items.put(wantedItem, ++currentQuantity);
@@ -66,6 +82,14 @@ public class Sale {
     }
 
     /**
+     * 
+     * @param receipt the {@link Receipt} type to be used
+     */
+    public void setReceiptType(Receipt receipt){
+        this.receiptType=receipt;
+    }
+
+    /**
      * Marks the sale as closed
      *
      * @return the total {@link Amount} of the sale
@@ -75,13 +99,7 @@ public class Sale {
         return total;
     }
 
-    /**
-     * Checks if item has been scanned
-     *
-     * @param itemIdentifier identifier of item to be searched
-     * @return a <code>boolean</code> describing if the item has been scanned previously
-     */
-    public boolean previouslyScanned(String itemIdentifier) {
+    private boolean previouslyScanned(String itemIdentifier) {
         return (null != findInScannedItems(itemIdentifier));
     }
 
@@ -93,7 +111,9 @@ public class Sale {
      */
     public void printReceipt(Amount change, ReceiptPrinter printer) {
         SaleDTO saleDTO = createSaleDTO();
-        Receipt receipt = new Receipt(saleDTO, change);
+        Receipt receipt = receiptType;
+        receipt.setSale(saleDTO);
+        receipt.setChange(change);
         printer.PrintReceipt(receipt);
     }
 
@@ -110,7 +130,8 @@ public class Sale {
     }
 
     private SaleDTO createSaleDTO() {
-        SaleDTO saleDTO = new SaleDTO(items, total, vatAmount, closedSale);
+        Map<ItemDTO, Integer> immutable = Collections.unmodifiableMap(new HashMap<>(items));
+        SaleDTO saleDTO = new SaleDTO(immutable, total, vatAmount, closedSale);
         return saleDTO;
     }
 

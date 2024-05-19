@@ -4,13 +4,22 @@ import se.kth.iv1350.pos.model.SaleDTO;
 import se.kth.iv1350.pos.util.Amount;
 
 /**
- * This class represents the external accounting system of a point of sale
+ * A singleton that represents the external accounting system of a point of sale
  */
 public class ExternalAccountingSystem {
+    private static final ExternalAccountingSystem externalAccountingSystem = new ExternalAccountingSystem();
     /**
      * Creates a new instance, represents an external accounting system
      */
-    ExternalAccountingSystem() {
+    private ExternalAccountingSystem() {
+    }
+
+    /**
+     * 
+     * @return the only instance of this singleton
+     */
+    public static ExternalAccountingSystem getInstance(){
+        return externalAccountingSystem;
     }
 
     /**

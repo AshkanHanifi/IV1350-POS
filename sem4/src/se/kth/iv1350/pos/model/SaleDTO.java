@@ -3,26 +3,26 @@ package se.kth.iv1350.pos.model;
 import se.kth.iv1350.pos.integration.ItemDTO;
 import se.kth.iv1350.pos.util.Amount;
 
-import java.util.HashMap;
+import java.util.Map;
 
 /**
  * This class represents the data transfer object of a sale
  */
 public class SaleDTO {
 
-    private HashMap<ItemDTO, Integer> items;
+    private Map<ItemDTO, Integer> items;
     private Amount total;
     private Amount vatAmount;
     private boolean closedSale;
 
     /**
      * Creates a new instance, describes a sale
-     * @param items a <code>Hashmap<ItemDTO, Integer></code> containing all items of a sale
+     * @param items an immutable <code>Map<ItemDTO, Integer></code> containing all items of a sale
      * @param total the total {@link Amount} of a sale
      * @param vatAmount the VAT-{@link Amount} of a sale
      * @param closedSale a <code>boolean</code> flag describing if a sale is closed or not
      */
-    SaleDTO(HashMap<ItemDTO, Integer> items, Amount total, Amount vatAmount, boolean closedSale) {
+    SaleDTO(Map<ItemDTO, Integer> items, Amount total, Amount vatAmount, boolean closedSale) {
         this.items = items;
         this.total = total;
         this.vatAmount = vatAmount;
@@ -39,7 +39,7 @@ public class SaleDTO {
     /**
      * @return the items of the sale, type of <code>Hashmap<ItemDTO, Integer></code>
      */
-    public HashMap<ItemDTO, Integer> getItems() {
+    public Map<ItemDTO, Integer> getItems() {
         return items;
     }
 

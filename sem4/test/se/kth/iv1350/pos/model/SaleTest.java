@@ -7,10 +7,10 @@ import org.junit.jupiter.api.Test;
 import se.kth.iv1350.pos.integration.ExternalAccountingSystem;
 import se.kth.iv1350.pos.integration.ExternalInventorySystem;
 import se.kth.iv1350.pos.integration.ExternalSystemCreator;
+import se.kth.iv1350.pos.integration.InventorySystemException;
 import se.kth.iv1350.pos.integration.ItemDTO;
 import se.kth.iv1350.pos.util.Amount;
-
-import java.util.HashMap;
+import java.util.Map;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -21,15 +21,14 @@ class SaleTest {
     private Sale saleWithNoItems;
     private String itemIdentifier;
     @BeforeEach
-    void setUp() {
+    void setUp() throws NoSuchItemException {
         itemIdentifier="hij789";
         ExternalSystemCreator externalSystemCreator=new ExternalSystemCreator();
         inventory=externalSystemCreator.getExternalInventorySystem();
         inventory.addItem(itemIdentifier+";Ice cream;4:00;25;Ice cream 100 g, chocolate flavour, dairy");
         accountingSystem= externalSystemCreator.getExternalAccountingSystem();
         saleWith1ItemWithTotal5=new Sale();
-        ItemDTO item = inventory.getItemInfo(itemIdentifier);
-        saleWith1ItemWithTotal5.addNewItem(item);
+        saleWith1ItemWithTotal5.scanItem(itemIdentifier, inventory);
         saleWithNoItems=new Sale();
     }
 
@@ -41,9 +40,45 @@ class SaleTest {
     }
 
     @Test
+    public void testAddingItemThatDoesNotExist(){
+        try {
+            SaleDTO updatedSale = saleWithNoItems.scanItem("nonExistingItem", inventory);
+            fail("Could add non-existant item");
+        } catch (NoSuchItemException e) {
+            assertTrue(e.getMessage().contains("nonExistingItem"),
+                       "Error does not contain item identifier: "
+                       + e.getMessage());
+        } catch (InventorySystemException e){
+            fail("Wrong exception thrown");
+            e.printStackTrace();
+        }
+    }
+
+    @Test
+    public void testAddingItemWithInventoryError(){
+        try {
+            SaleDTO updatedSale = saleWithNoItems.scanItem("error", inventory);
+            fail("Could add non-existant item");
+        } catch (NoSuchItemException e) {
+            fail("Wrong exception thrown");
+            e.printStackTrace();
+        } catch (InventorySystemException e){
+            assertTrue(e.getMessage().contains("connection"),
+            "Error does not contain correct message: "
+            + e.getMessage());
+        }
+    }
+
+    @Test
     public void testAddingItemToEmptySale(){
         ItemDTO item = inventory.getItemInfo(itemIdentifier);
-        SaleDTO updatedSale=saleWithNoItems.addNewItem(item);
+        SaleDTO updatedSale=null;
+        try {
+            updatedSale = saleWithNoItems.scanItem(itemIdentifier, inventory);
+        } catch (NoSuchItemException e) {
+            fail("Got exception");
+            e.printStackTrace();
+        }
         int expResult=1;
         int result=findAmountOfItem(item, updatedSale);
         assertEquals(expResult, result, "Quantity of item incorrect");
@@ -52,7 +87,13 @@ class SaleTest {
     @Test
     public void testAddingAlreadyExistingItem(){
         ItemDTO item = inventory.getItemInfo(itemIdentifier);
-        SaleDTO updatedSale=saleWith1ItemWithTotal5.updateItemQuantity(itemIdentifier);
+        SaleDTO updatedSale=null;
+        try {
+            updatedSale = saleWith1ItemWithTotal5.scanItem(itemIdentifier, inventory);
+        } catch (NoSuchItemException e) {
+            fail("Got exception");
+            e.printStackTrace();
+        }
         int expResult=2;
         int result=findAmountOfItem(item, updatedSale);
         assertEquals(expResult, result, "Quantity of item incorrect");
@@ -60,16 +101,26 @@ class SaleTest {
 
     @Test
     public void testAddingIncrementingTotal(){
-        ItemDTO item = inventory.getItemInfo(itemIdentifier);
-        SaleDTO updatedSale=saleWithNoItems.addNewItem(item);
+        SaleDTO updatedSale=null;
+        try {
+            updatedSale = saleWithNoItems.scanItem(itemIdentifier, inventory);
+        } catch (NoSuchItemException e) {
+            fail("Got exception");
+            e.printStackTrace();
+        }
         Amount expResult= new Amount(5);
         Amount result=updatedSale.getTotal();
         assertEquals(expResult, result, "Total of sale incorrect");
     }
     @Test
     public void testAddingIncrementingVAT(){
-        ItemDTO item = inventory.getItemInfo(itemIdentifier);
-        SaleDTO updatedSale=saleWithNoItems.addNewItem(item);
+        SaleDTO updatedSale=null;
+        try {
+            updatedSale = saleWithNoItems.scanItem(itemIdentifier, inventory);
+        } catch (NoSuchItemException e) {
+            fail("Got exception");
+            e.printStackTrace();
+        }
         Amount expResult= new Amount(1);
         Amount result=updatedSale.getVatAmount();
         assertEquals(expResult, result, "Total of sale incorrect");
@@ -94,20 +145,6 @@ class SaleTest {
     }
 
     @Test
-    public void testIfPreviouslyScannedWhenScanned(){
-        boolean expResult=true;
-        boolean result=saleWith1ItemWithTotal5.previouslyScanned(itemIdentifier);
-        assertEquals(expResult, result, "Item has been previously scanned");
-    }
-
-    @Test
-    public void testIfPreviouslyScannedWhenNotScanned(){
-        boolean expResult=false;
-        boolean result=saleWithNoItems.previouslyScanned(itemIdentifier);
-        assertEquals(expResult, result, "Item has not been previously scanned");
-    }
-
-    @Test
     public void testEndingSaleReturnsCorrectAmount(){
         Amount expResult=new Amount(5);
         Amount result=saleWith1ItemWithTotal5.endSale();
@@ -121,7 +158,7 @@ class SaleTest {
         assertEquals(expResult, result, "Incorrect sale total");
     }
     private int findAmountOfItem(ItemDTO item, SaleDTO sale){
-        HashMap<ItemDTO, Integer> items=sale.getItems();
+        Map<ItemDTO, Integer> items=sale.getItems();
         return items.get(item);
     }
 }

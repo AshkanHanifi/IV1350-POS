@@ -29,7 +29,7 @@ public class ExternalSystemCreator {
      * Creates a new instance, creates all external systems
      */
     public ExternalSystemCreator() {
-        this.accounting = new ExternalAccountingSystem();
-        this.inventory = new ExternalInventorySystem();
+        this.accounting = ExternalAccountingSystem.getInstance();
+        this.inventory = ExternalInventorySystem.getInstance();
     }
 }
