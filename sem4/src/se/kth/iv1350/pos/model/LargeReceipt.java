@@ -14,13 +14,6 @@ public class LargeReceipt implements Receipt {
     private SaleDTO saleDTO;
     private Amount change;
 
-    /**
-     * Creates a new instance, describes a receipt
-     * 
-    */
-    public LargeReceipt() {
-        createTimestamp();
-    }
 
     private void createTimestamp() {
         DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ofPattern("yyyy/MM/dd HH:mm");
@@ -41,6 +34,7 @@ public class LargeReceipt implements Receipt {
 
 
     public String createReceiptString() {
+        createTimestamp();
         StringBuilder stringBuilder = new StringBuilder();
         stringBuilder.append("- - - - - - - - - - - - - - - - - - Begin receipt - - - - - - - - - - - - - - - - - - -\n");
         stringBuilder.append("Time of sale: " + timestamp + "\n\n");

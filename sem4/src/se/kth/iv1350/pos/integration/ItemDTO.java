@@ -87,6 +87,10 @@ public class ItemDTO {
         return totalAmount;
     }
 
+    /**
+     * 
+     * @return the value used to scale the VAT
+     */
     public int getScaleVat(){
         return SCALE_VAT;
     }

@@ -3,6 +3,7 @@ package se.kth.iv1350.pos.view;
 import se.kth.iv1350.pos.controller.Controller;
 import se.kth.iv1350.pos.controller.OperationFailedException;
 import se.kth.iv1350.pos.integration.ItemDTO;
+import se.kth.iv1350.pos.model.LargeReceipt;
 import se.kth.iv1350.pos.model.NoSuchItemException;
 import se.kth.iv1350.pos.model.SaleDTO;
 import se.kth.iv1350.pos.model.SmallReceipt;
@@ -29,7 +30,7 @@ public class View {
     public View(Controller controller) throws IOException {
         this.controller = controller;
         this.logger=new FileLogger("exception-log.txt", false);
-        controller.setReceiptType(new SmallReceipt());
+        controller.setReceiptType(new LargeReceipt());
         controller.addRevenueObserver(new TotalRevenueFileOutput());
         controller.addRevenueObserver(new TotalRevenueView());
         controller.addLogger(logger);
