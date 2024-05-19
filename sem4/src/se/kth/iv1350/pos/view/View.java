@@ -76,6 +76,7 @@ public class View {
         } catch (OperationFailedException e) {
             System.out.println(e.getMessage());
             System.out.println();
+            logger.logException(e);
         }
     }
 
