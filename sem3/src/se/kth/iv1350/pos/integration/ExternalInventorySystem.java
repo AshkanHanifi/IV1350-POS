@@ -3,7 +3,7 @@ package se.kth.iv1350.pos.integration;
 import se.kth.iv1350.pos.model.SaleDTO;
 import se.kth.iv1350.pos.util.Amount;
 import java.util.ArrayList;
-import java.util.HashMap;
+import java.util.Map;
 
 /**
  * This class represents the external inventory system of a point of sale
@@ -35,7 +35,7 @@ public class ExternalInventorySystem {
      * @param saleDTO a {@link SaleDTO} describing the current sale
      */
     public void updateInventory(SaleDTO saleDTO) {
-        HashMap<ItemDTO, Integer> items = saleDTO.getItems();
+        Map<ItemDTO, Integer> items = saleDTO.getItems();
         for (ItemDTO item : items.keySet()) {
             System.out.println("Told external inventory system to decrease inventory quantity of item " +
                     item.getItemIdentifier() + " by " + items.get(item) + " units");

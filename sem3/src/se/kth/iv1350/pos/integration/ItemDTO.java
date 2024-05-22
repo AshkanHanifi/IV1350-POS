@@ -87,6 +87,14 @@ public class ItemDTO {
         return totalAmount;
     }
 
+    /**
+     * 
+     * @return the scale value of the VAT field
+     */
+    public int getScaleVat(){
+        return SCALE_VAT;
+    }
+
     private Amount calculateVAT() {
         return price.scale(vatRate / SCALE_VAT);
     }
@@ -95,16 +103,6 @@ public class ItemDTO {
         return calculateVAT().addition(price);
     }
 
-    @Override
-    public String toString() {
-        StringBuilder stringBuilder = new StringBuilder();
-        stringBuilder.append("Item ID: " + itemIdentifier + "\n");
-        stringBuilder.append("Item name: " + name + "\n");
-        stringBuilder.append("Item cost: " + price.addition(price.scale(vatRate / SCALE_VAT)) + " " + Amount.CURRENCY + "\n");
-        stringBuilder.append("VAT: " + (int) (vatRate) + "%\n");
-        stringBuilder.append("Item description: " + itemDescription + "\n");
-        return stringBuilder.toString();
-    }
 
     @Override
     public int hashCode() {

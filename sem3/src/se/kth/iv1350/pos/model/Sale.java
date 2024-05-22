@@ -6,8 +6,10 @@ import se.kth.iv1350.pos.integration.ItemDTO;
 import se.kth.iv1350.pos.integration.ReceiptPrinter;
 import se.kth.iv1350.pos.util.Amount;
 
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.Iterator;
+import java.util.Map;
 
 /**
  * This class represents the sale occurring at a point of sale
@@ -110,7 +112,8 @@ public class Sale {
     }
 
     private SaleDTO createSaleDTO() {
-        SaleDTO saleDTO = new SaleDTO(items, total, vatAmount, closedSale);
+        Map<ItemDTO, Integer> immutable = Collections.unmodifiableMap(new HashMap<>(items));
+        SaleDTO saleDTO = new SaleDTO(immutable, total, vatAmount, closedSale);
         return saleDTO;
     }
 

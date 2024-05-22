@@ -5,7 +5,7 @@ import se.kth.iv1350.pos.util.Amount;
 
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
-import java.util.HashMap;
+import java.util.Map;
 /**
  * This class represents the receipt of a closed sale in a point of sale
  */
@@ -33,7 +33,7 @@ public class Receipt {
     }
 
     private void addItemsToReceipt(StringBuilder stringBuilder) {
-        HashMap<ItemDTO, Integer> items = saleDTO.getItems();
+        Map<ItemDTO, Integer> items = saleDTO.getItems();
         for (ItemDTO item : items.keySet()) {
             int itemAmount = items.get(item);
             String formatted = String.format("%-40s %12d x %-10s %10s %8s\n",

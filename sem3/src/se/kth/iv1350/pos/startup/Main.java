@@ -10,6 +10,7 @@ public class Main {
         ExternalSystemCreator exCreator = new ExternalSystemCreator();
         ReceiptPrinter printer = new ReceiptPrinter();
         Controller controller = new Controller(exCreator, printer);
+        @SuppressWarnings("unused")
         View view = new View(controller);
     }
 }

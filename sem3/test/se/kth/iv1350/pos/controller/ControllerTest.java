@@ -7,11 +7,10 @@ import se.kth.iv1350.pos.integration.ExternalInventorySystem;
 import se.kth.iv1350.pos.integration.ExternalSystemCreator;
 import se.kth.iv1350.pos.integration.ItemDTO;
 import se.kth.iv1350.pos.integration.ReceiptPrinter;
-import se.kth.iv1350.pos.model.Payment;
 import se.kth.iv1350.pos.model.SaleDTO;
 import se.kth.iv1350.pos.util.Amount;
 
-import java.util.HashMap;
+import java.util.Map;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -104,7 +103,7 @@ class ControllerTest {
     }
 
     private int findAmountOfItem(ItemDTO item, SaleDTO sale){
-        HashMap<ItemDTO, Integer> items=sale.getItems();
+        Map<ItemDTO, Integer> items=sale.getItems();
         return items.get(item);
     }
 }

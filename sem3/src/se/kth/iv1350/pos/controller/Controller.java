@@ -17,7 +17,6 @@ import se.kth.iv1350.pos.model.SaleDTO;
  */
 
 public class Controller {
-    private ExternalSystemCreator exCreator;
     private ExternalInventorySystem inventory;
     private ExternalAccountingSystem accounting;
     private ReceiptPrinter printer;
@@ -31,7 +30,6 @@ public class Controller {
      * @param printer   the {@link ReceiptPrinter} used for printing receipts
      */
     public Controller(ExternalSystemCreator exCreator, ReceiptPrinter printer) {
-        this.exCreator = exCreator;
         this.printer = printer;
         this.inventory = exCreator.getExternalInventorySystem();
         this.accounting = exCreator.getExternalAccountingSystem();

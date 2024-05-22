@@ -61,8 +61,21 @@ public class View {
         while (iterator.hasNext()) {
             currentItem = iterator.next();
             if (itemIdentifier.equals(currentItem.getItemIdentifier())) {
-                System.out.println(currentItem);
+                System.out.println(itemDTOtoString(currentItem));
             }
         }
+    }
+
+
+    private String itemDTOtoString(ItemDTO item) {
+        Amount price =item.getPrice();
+        float vatRate = item.getVatRate();
+        StringBuilder stringBuilder = new StringBuilder();
+        stringBuilder.append("Item ID: " + item.getItemIdentifier() + "\n");
+        stringBuilder.append("Item name: " + item.getName() + "\n");
+        stringBuilder.append("Item cost: " + price.addition(price.scale(vatRate / item.getScaleVat())) + " " + Amount.CURRENCY + "\n");
+        stringBuilder.append("VAT: " + (int) (vatRate) + "%\n");
+        stringBuilder.append("Item description: " + item.getItemDescription() + "\n");
+        return stringBuilder.toString();
     }
 }
