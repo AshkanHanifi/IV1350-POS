@@ -2,6 +2,7 @@ package se.kth.iv1350.pos.view;
 
 import java.io.IOException;
 
+import se.kth.iv1350.pos.model.SaleDTO;
 import se.kth.iv1350.pos.model.TotalRevenueObserver;
 import se.kth.iv1350.pos.util.Amount;
 import se.kth.iv1350.pos.util.FileLogger;
@@ -17,7 +18,8 @@ public class TotalRevenueFileOutput implements TotalRevenueObserver {
     }
 
     @Override
-    public void newSale(Amount revenue) {
+    public void newSale(SaleDTO saleDTO) {
+        Amount revenue = saleDTO.getTotal();
         this.revenue=this.revenue.addition(revenue);
         this.revenue.addition(revenue);
         logger.log("Current revenue: " + this.revenue + " Added: " + revenue);

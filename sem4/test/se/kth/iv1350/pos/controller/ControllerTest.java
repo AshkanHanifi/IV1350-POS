@@ -6,8 +6,8 @@ import org.junit.jupiter.api.Test;
 import se.kth.iv1350.pos.integration.ExternalInventorySystem;
 import se.kth.iv1350.pos.integration.ExternalSystemCreator;
 import se.kth.iv1350.pos.integration.ItemDTO;
+import se.kth.iv1350.pos.integration.NoSuchItemException;
 import se.kth.iv1350.pos.integration.ReceiptPrinter;
-import se.kth.iv1350.pos.model.NoSuchItemException;
 import se.kth.iv1350.pos.model.SaleDTO;
 import se.kth.iv1350.pos.util.Amount;
 import se.kth.iv1350.pos.util.FileLogger;
@@ -26,7 +26,7 @@ class ControllerTest {
     private String itemIdentifier;
 
     @BeforeEach
-    void setUp() throws IOException {
+    void setUp() throws IOException, NoSuchItemException {
         SystemLogger logger = new FileLogger("test-exceptions.txt", false);
         ExternalSystemCreator externalSystemCreator = new ExternalSystemCreator();
         ExternalInventorySystem inventory = externalSystemCreator.getExternalInventorySystem();
@@ -58,6 +58,7 @@ class ControllerTest {
         controllerWithSaleTotalling5 = null;
     }
 
+    @SuppressWarnings("unused")
     @Test
     public void testAddingItemThatDoesNotExist(){
         try {
@@ -74,6 +75,7 @@ class ControllerTest {
     }
 
     @Test
+    @SuppressWarnings("unused")
     public void testAddingItemWithInventoryError(){
         try {
             SaleDTO updatedSale = controllerWithEmptySale.scanItem("error");

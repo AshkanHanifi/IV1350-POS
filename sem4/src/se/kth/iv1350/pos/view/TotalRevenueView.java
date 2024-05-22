@@ -1,5 +1,6 @@
 package se.kth.iv1350.pos.view;
 
+import se.kth.iv1350.pos.model.SaleDTO;
 import se.kth.iv1350.pos.model.TotalRevenueObserver;
 import se.kth.iv1350.pos.util.Amount;
 
@@ -12,7 +13,8 @@ public class TotalRevenueView implements TotalRevenueObserver{
     }
 
     @Override
-    public void newSale(Amount revenue) {
+    public void newSale(SaleDTO saleDTO) {
+        Amount revenue = saleDTO.getTotal();
         this.revenue=this.revenue.addition(revenue);
         System.out.println("Current revenue: " + this.revenue + " Added: " + revenue);
     }

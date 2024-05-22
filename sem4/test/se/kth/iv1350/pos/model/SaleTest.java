@@ -9,6 +9,7 @@ import se.kth.iv1350.pos.integration.ExternalInventorySystem;
 import se.kth.iv1350.pos.integration.ExternalSystemCreator;
 import se.kth.iv1350.pos.integration.InventorySystemException;
 import se.kth.iv1350.pos.integration.ItemDTO;
+import se.kth.iv1350.pos.integration.NoSuchItemException;
 import se.kth.iv1350.pos.util.Amount;
 import java.util.Map;
 
@@ -40,6 +41,7 @@ class SaleTest {
     }
 
     @Test
+    @SuppressWarnings("unused")
     public void testAddingItemThatDoesNotExist(){
         try {
             SaleDTO updatedSale = saleWithNoItems.scanItem("nonExistingItem", inventory);
@@ -55,6 +57,7 @@ class SaleTest {
     }
 
     @Test
+    @SuppressWarnings("unused")
     public void testAddingItemWithInventoryError(){
         try {
             SaleDTO updatedSale = saleWithNoItems.scanItem("error", inventory);
@@ -71,9 +74,10 @@ class SaleTest {
 
     @Test
     public void testAddingItemToEmptySale(){
-        ItemDTO item = inventory.getItemInfo(itemIdentifier);
+        ItemDTO item=null;
         SaleDTO updatedSale=null;
         try {
+            item = inventory.getItemInfo(itemIdentifier);
             updatedSale = saleWithNoItems.scanItem(itemIdentifier, inventory);
         } catch (NoSuchItemException e) {
             fail("Got exception");
@@ -86,9 +90,10 @@ class SaleTest {
 
     @Test
     public void testAddingAlreadyExistingItem(){
-        ItemDTO item = inventory.getItemInfo(itemIdentifier);
+        ItemDTO item = null;
         SaleDTO updatedSale=null;
         try {
+            item = inventory.getItemInfo(itemIdentifier);
             updatedSale = saleWith1ItemWithTotal5.scanItem(itemIdentifier, inventory);
         } catch (NoSuchItemException e) {
             fail("Got exception");

@@ -11,5 +11,5 @@ public interface TotalRevenueObserver {
      * 
      * @param revenue the {@link Amount} describing the net revenue of a completed sale 
      */
-    void newSale(Amount revenue);
+    void newSale(SaleDTO saleDTO);
 }

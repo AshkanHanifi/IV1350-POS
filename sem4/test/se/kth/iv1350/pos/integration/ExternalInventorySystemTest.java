@@ -24,7 +24,13 @@ class ExternalInventorySystemTest {
     @Test
     void testGetItemInfoWhenItemExists() {
         String expResult=itemIdentifier;
-        ItemDTO searchedItem=inventorySystem.getItemInfo(itemIdentifier);
+        ItemDTO searchedItem=null;
+        try{
+        searchedItem=inventorySystem.getItemInfo(itemIdentifier);
+        } catch (Exception e){
+            fail("Exception thrown");
+            e.printStackTrace();
+        }
         assertEquals(expResult, searchedItem.getItemIdentifier(),
                 "wrong or no item was found");
     }
@@ -32,9 +38,15 @@ class ExternalInventorySystemTest {
     @Test
     void testGetItemInfoWhenItemDoesntExist() {
         String searchedItemIdentifier="";
-        String expResult=null;
-        ItemDTO searchedItem=inventorySystem.getItemInfo(searchedItemIdentifier);
-        assertEquals(expResult, searchedItem,
-                "wrong or no item was found");
+        try {
+            @SuppressWarnings("unused")
+            ItemDTO searchedItem=inventorySystem.getItemInfo(searchedItemIdentifier);
+            fail("Exception not thrown");
+        } catch (NoSuchItemException e) {
+            assertTrue(e.getMessage().contains("Unable to find item"), 
+            "Error doesn't contain correct message");
+        } catch (Exception e){
+            fail("Wrong exception thrown");
+        }
     }
 }

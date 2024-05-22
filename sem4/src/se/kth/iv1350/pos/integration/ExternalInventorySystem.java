@@ -33,13 +33,17 @@ private static final ExternalInventorySystem externalInventorySystem = new Exter
      *
      * @param itemIdentifier String used to identify item
      * @return an {@link ItemDTO} of the searched item
+     * @throws NoSuchItemException when item not found
      * @throws InventorySystemException when connection to server fails
      */
-    public ItemDTO getItemInfo(String itemIdentifier){
+    public ItemDTO getItemInfo(String itemIdentifier) throws NoSuchItemException{
         if(itemIdentifier.equals("error")){
             throw new InventorySystemException("Server connection failure");
         }
         ItemDTO wantedItem = findItem(itemIdentifier);
+        if(wantedItem==null){
+            throw new NoSuchItemException(itemIdentifier);
+        }
         return wantedItem;
     }
 

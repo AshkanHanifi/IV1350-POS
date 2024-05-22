@@ -3,9 +3,11 @@ package se.kth.iv1350.pos.model;
 import se.kth.iv1350.pos.integration.ExternalAccountingSystem;
 import se.kth.iv1350.pos.integration.ExternalInventorySystem;
 import se.kth.iv1350.pos.integration.ItemDTO;
+import se.kth.iv1350.pos.integration.NoSuchItemException;
 import se.kth.iv1350.pos.integration.ReceiptPrinter;
 import se.kth.iv1350.pos.util.Amount;
 
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -20,12 +22,15 @@ public class Sale {
     private Amount vatAmount = new Amount(0);
     private boolean closedSale = false;
     private Receipt receiptType;
+    private ArrayList<TotalRevenueObserver> revenueObservers;
+
 
     /**
      * Creates a new instance, representing a sale
      */
     public Sale() {
         items = new HashMap<>();
+        this.revenueObservers=new ArrayList<>();
     }
 
 
@@ -44,9 +49,6 @@ public class Sale {
             saleDTO = updateItemQuantity(itemIdentifier);
         } else {
             ItemDTO item = inventory.getItemInfo(itemIdentifier);
-            if(item==null){
-                throw new NoSuchItemException(itemIdentifier);
-            }
             saleDTO = addNewItem(item);
         }
         return saleDTO;
@@ -78,6 +80,7 @@ public class Sale {
         Amount change = payment.calculateChange(saleDTO);
         accounting.logSale(saleDTO, change);
         inventory.updateInventory(saleDTO);
+        alertRentalObserver(createSaleDTO());
         return change;
     }
 
@@ -115,6 +118,21 @@ public class Sale {
         receipt.setSale(saleDTO);
         receipt.setChange(change);
         printer.PrintReceipt(receipt);
+    }
+
+        /**
+     * 
+     * @param observer a list of {@link TotalRevenueObserver} to observe the revenue of this controller
+     */
+
+     public void addRevenueObserver(ArrayList<TotalRevenueObserver> observer){
+        revenueObservers.addAll(observer);
+    }
+
+    private void alertRentalObserver(SaleDTO saleDTO){
+        for(TotalRevenueObserver observer : revenueObservers){
+            observer.newSale(saleDTO);
+        }
     }
 
     private ItemDTO findInScannedItems(String itemIdentifier) {

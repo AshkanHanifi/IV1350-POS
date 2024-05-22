@@ -3,8 +3,8 @@ package se.kth.iv1350.pos.view;
 import se.kth.iv1350.pos.controller.Controller;
 import se.kth.iv1350.pos.controller.OperationFailedException;
 import se.kth.iv1350.pos.integration.ItemDTO;
+import se.kth.iv1350.pos.integration.NoSuchItemException;
 import se.kth.iv1350.pos.model.LargeReceipt;
-import se.kth.iv1350.pos.model.NoSuchItemException;
 import se.kth.iv1350.pos.model.SaleDTO;
 import se.kth.iv1350.pos.model.SmallReceipt;
 import se.kth.iv1350.pos.util.Amount;
@@ -18,6 +18,7 @@ import java.util.Iterator;
 /**
  * This class contains a hardcoded version of a view, since the program doesn't have a view
  */
+@SuppressWarnings("unused")
 public class View {
     private Controller controller;
     private SystemLogger logger;
@@ -75,7 +76,7 @@ public class View {
             System.out.println();
             logger.logException(e);
         } catch (OperationFailedException e) {
-            System.out.println(e.getMessage());
+            System.out.println("Could not add item");
             System.out.println();
             logger.logException(e);
         }

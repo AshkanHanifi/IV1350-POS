@@ -3,6 +3,7 @@ package se.kth.iv1350.pos.controller;
 
 import se.kth.iv1350.pos.integration.ExternalSystemCreator;
 import se.kth.iv1350.pos.integration.InventorySystemException;
+import se.kth.iv1350.pos.integration.NoSuchItemException;
 import se.kth.iv1350.pos.integration.ExternalInventorySystem;
 
 import java.util.ArrayList;
@@ -12,7 +13,6 @@ import se.kth.iv1350.pos.integration.ReceiptPrinter;
 import se.kth.iv1350.pos.util.Amount;
 import se.kth.iv1350.pos.util.SystemLogger;
 import se.kth.iv1350.pos.model.LargeReceipt;
-import se.kth.iv1350.pos.model.NoSuchItemException;
 import se.kth.iv1350.pos.model.Payment;
 import se.kth.iv1350.pos.model.Receipt;
 import se.kth.iv1350.pos.model.Register;
@@ -74,6 +74,7 @@ public class Controller {
     public void addLogger(SystemLogger logger){
         this.logger=logger;
     }
+
     /**
      * 
      * @param observer a {@link TotalRevenueObserver} to observe the revenue of this controller
@@ -102,15 +103,9 @@ public class Controller {
         Amount change = sale.pay(payment, inventory, accounting);
         sale.printReceipt(change, printer);
         register.updateRegister(paidAmount, change);
-        alertRentalObserver(paidAmount.minus(change));
         return change;
     }
 
-    private void alertRentalObserver(Amount revenue){
-        for(TotalRevenueObserver observer : revenueObservers){
-            observer.newSale(revenue);
-        }
-    }
 
 
     /**
@@ -118,6 +113,7 @@ public class Controller {
      */
     public void startSale() {
         this.sale = new Sale();
+        this.sale.addRevenueObserver(revenueObservers);
         this.sale.setReceiptType(receiptType);
     }
 
