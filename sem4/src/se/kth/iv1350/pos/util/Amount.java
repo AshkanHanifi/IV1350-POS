@@ -47,6 +47,15 @@ public final class Amount {
 
     /**
      * 
+     * @param other <code>Amount</code> to compare against
+     * @return true if this is greater than other
+     */
+    public boolean isGreaterThan(Amount other){
+        return this.amount>other.amount;
+    }
+
+    /**
+     * 
      * @param scaleValue the value to scale this amount with
      * @return a new <code>Amount</code> scaled by <code>scaleValue</code>
      */
@@ -55,6 +64,17 @@ public final class Amount {
         return new Amount(currentAmount * scaleValue);
     }
 
+    /**
+     * 
+     * @param scaleValue the value to scale this amount with
+     * @return a new <code>Amount</code> scaled by <code>scaleValue</code>
+     */
+    public Amount scale(Amount other) {
+        float currentAmount = (float) amount / SCALE_AMOUNT;
+        float otherAmount=(float) other.amount/SCALE_AMOUNT;
+        return new Amount(currentAmount * otherAmount);
+    }
+    
     @Override
     public boolean equals(Object other) {
         if (other == null || !(other instanceof Amount)) {

@@ -6,6 +6,7 @@ package se.kth.iv1350.pos.integration;
 public class ExternalSystemCreator {
     private ExternalAccountingSystem accounting;
     private ExternalInventorySystem inventory;
+    private DiscountDatabase discount;
 
     /**
      * Returns an {@link ExternalAccountingSystem}
@@ -26,10 +27,19 @@ public class ExternalSystemCreator {
     }
 
     /**
+     * Returns an {@link DiscountDatabase}
+     * @return a {@link DiscountDatabase}
+     */
+    public DiscountDatabase getDiscountDatabase(){
+        return discount;
+    }
+
+    /**
      * Creates a new instance, creates all external systems
      */
     public ExternalSystemCreator() {
         this.accounting = ExternalAccountingSystem.getInstance();
         this.inventory = ExternalInventorySystem.getInstance();
+        this.discount= DiscountDatabase.getInstance();
     }
 }

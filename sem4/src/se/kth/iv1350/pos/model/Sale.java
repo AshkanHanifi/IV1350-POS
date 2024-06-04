@@ -1,5 +1,6 @@
 package se.kth.iv1350.pos.model;
 
+import se.kth.iv1350.pos.integration.DiscountDatabase;
 import se.kth.iv1350.pos.integration.ExternalAccountingSystem;
 import se.kth.iv1350.pos.integration.ExternalInventorySystem;
 import se.kth.iv1350.pos.integration.ItemDTO;
@@ -21,8 +22,9 @@ public class Sale {
     private Amount total = new Amount(0);
     private Amount vatAmount = new Amount(0);
     private boolean closedSale = false;
-    private Receipt receiptType;
     private ArrayList<TotalRevenueObserver> revenueObservers;
+    private Amount discountTotal=new Amount(0);
+
 
 
     /**
@@ -31,6 +33,34 @@ public class Sale {
     public Sale() {
         items = new HashMap<>();
         this.revenueObservers=new ArrayList<>();
+    }
+
+    /**
+     * 
+     * @param discountDatabase the {@link DiscountDatabase} to use for finding discounts
+     * @param customerID the customerID to be used to find discounts
+     * @return a {@link DiscountContainer} containing discount percentage and new total
+     */
+    public DiscountContainer percentageDiscount(DiscountDatabase discountDatabase, String customerID){
+        Amount discount=discountDatabase.precentageDiscount(customerID, createSaleDTO());
+        Amount discountAmount=this.total.scale(discount);
+        this.total=this.total.minus(discountAmount);
+        this.discountTotal=this.discountTotal.addition(discountAmount);
+        return new DiscountContainer(discount, total);
+    }
+
+    /**
+     * 
+     * @param discountDatabase the {@link DiscountDatabase} to use for finding discounts
+     * @param customerID the customerID to be used to find discounts
+     * @return a {@link DiscountContainer} containing discount amount and new total
+     */
+    public DiscountContainer totalDiscount(DiscountDatabase discountDatabase){
+        Amount discount=discountDatabase.totalDiscount(createSaleDTO());
+        this.total=this.total.minus(discount);
+        this.discountTotal=this.discountTotal.addition(discount);
+        DiscountContainer container=new DiscountContainer(discount, this.total);
+        return container;
     }
 
 
@@ -85,14 +115,6 @@ public class Sale {
     }
 
     /**
-     * 
-     * @param receipt the {@link Receipt} type to be used
-     */
-    public void setReceiptType(Receipt receipt){
-        this.receiptType=receipt;
-    }
-
-    /**
      * Marks the sale as closed
      *
      * @return the total {@link Amount} of the sale
@@ -114,9 +136,7 @@ public class Sale {
      */
     public void printReceipt(Amount change, ReceiptPrinter printer) {
         SaleDTO saleDTO = createSaleDTO();
-        Receipt receipt = receiptType;
-        receipt.setSale(saleDTO);
-        receipt.setChange(change);
+        Receipt receipt = new Receipt(saleDTO, change, discountTotal);
         printer.PrintReceipt(receipt);
     }
 

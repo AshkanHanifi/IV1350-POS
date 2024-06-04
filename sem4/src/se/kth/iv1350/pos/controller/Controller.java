@@ -8,13 +8,13 @@ import se.kth.iv1350.pos.integration.ExternalInventorySystem;
 
 import java.util.ArrayList;
 
+import se.kth.iv1350.pos.integration.DiscountDatabase;
 import se.kth.iv1350.pos.integration.ExternalAccountingSystem;
 import se.kth.iv1350.pos.integration.ReceiptPrinter;
 import se.kth.iv1350.pos.util.Amount;
 import se.kth.iv1350.pos.util.SystemLogger;
-import se.kth.iv1350.pos.model.LargeReceipt;
+import se.kth.iv1350.pos.model.DiscountContainer;
 import se.kth.iv1350.pos.model.Payment;
-import se.kth.iv1350.pos.model.Receipt;
 import se.kth.iv1350.pos.model.Register;
 import se.kth.iv1350.pos.model.Sale;
 import se.kth.iv1350.pos.model.SaleDTO;
@@ -27,12 +27,12 @@ import se.kth.iv1350.pos.model.TotalRevenueObserver;
 public class Controller {
     private ExternalInventorySystem inventory;
     private ExternalAccountingSystem accounting;
+    private DiscountDatabase discount;
     private ReceiptPrinter printer;
     private Sale sale;
     private ArrayList<TotalRevenueObserver> revenueObservers;
     private Register register;
     private SystemLogger logger;
-    private Receipt receiptType = new LargeReceipt();
 
     /**
      * Creates a new instance, representing the controller of a point of sale system
@@ -44,6 +44,7 @@ public class Controller {
         this.printer = printer;
         this.inventory = exCreator.getExternalInventorySystem();
         this.accounting = exCreator.getExternalAccountingSystem();
+        this.discount=exCreator.getDiscountDatabase();
         this.register=new Register();
         this.revenueObservers=new ArrayList<>();
     }
@@ -85,14 +86,6 @@ public class Controller {
     }
 
     /**
-     * 
-     * @param receipt the {@link Receipt} type to be used
-     */
-    public void setReceiptType(Receipt receipt){
-        this.receiptType=receipt;
-    }
-
-    /**
      * Pays for the {@link Sale} handled by this {@link Controller}
      *
      * @param paidAmount the {@link Amount} used for paying the {@link Sale}
@@ -106,7 +99,23 @@ public class Controller {
         return change;
     }
 
+    /**
+     * Calculates the discount returns a {@link DiscountContainer} with the discount percentage and new total
+     * @param customerID the customerID to be used to find discounts
+     * @return a {@link DiscountContainer} containing discount percentage and new total
+     */
+    public DiscountContainer percentageDiscount(String customerID) {
+        DiscountContainer discountContainer = sale.percentageDiscount(discount, customerID);
+        return discountContainer;
+    }
 
+    /**
+     * Calculates the discount returns a {@link DiscountContainer} with the the discount and new total
+     * @return a {@link DiscountContainer} containing discount total and new total
+     */
+    public DiscountContainer discountTotal(){
+        return sale.totalDiscount(discount);
+    }
 
     /**
      * Initiates a {@link Sale}
@@ -114,7 +123,6 @@ public class Controller {
     public void startSale() {
         this.sale = new Sale();
         this.sale.addRevenueObserver(revenueObservers);
-        this.sale.setReceiptType(receiptType);
     }
 
     /**

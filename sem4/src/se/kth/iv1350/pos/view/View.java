@@ -4,9 +4,8 @@ import se.kth.iv1350.pos.controller.Controller;
 import se.kth.iv1350.pos.controller.OperationFailedException;
 import se.kth.iv1350.pos.integration.ItemDTO;
 import se.kth.iv1350.pos.integration.NoSuchItemException;
-import se.kth.iv1350.pos.model.LargeReceipt;
+import se.kth.iv1350.pos.model.DiscountContainer;
 import se.kth.iv1350.pos.model.SaleDTO;
-import se.kth.iv1350.pos.model.SmallReceipt;
 import se.kth.iv1350.pos.util.Amount;
 import se.kth.iv1350.pos.util.FileLogger;
 import se.kth.iv1350.pos.util.SystemLogger;
@@ -31,11 +30,9 @@ public class View {
     public View(Controller controller) throws IOException {
         this.controller = controller;
         this.logger=new FileLogger("exception-log.txt", false);
-        controller.setReceiptType(new LargeReceipt());
         controller.addRevenueObserver(new TotalRevenueFileOutput());
         controller.addRevenueObserver(new TotalRevenueView());
         controller.addLogger(logger);
-        fakeAction();
         fakeAction();
     }
 
@@ -59,6 +56,21 @@ public class View {
     }
 
     private void endSale() {
+        DiscountContainer discountContainer =controller.percentageDiscount("discount");
+        if(discountContainer.getDiscountAmount().equals(new Amount(0))){
+            System.out.println("No percentage discount found");
+        } else {
+            System.out.println("Reduced total by " + discountContainer.getDiscountAmount().scale(100f) + "%");
+            System.out.println("New total: " + discountContainer.getNewTotal());
+        }
+        discountContainer = controller.discountTotal();
+        if(discountContainer.getDiscountAmount().equals(new Amount(0))){
+            System.out.println("No total discount found");
+        } else {
+            System.out.println("Reduced total by " + discountContainer.getDiscountAmount());
+            System.out.println("New total: " + discountContainer.getNewTotal());
+        }
+        System.out.println();
         System.out.println("End sale:");
         System.out.println("Total cost (incl VAT): " + controller.endSale() + " " + Amount.CURRENCY);
     }
