@@ -20,6 +20,8 @@ public class ReceiptTest {
     private SaleDTO saleDTOWithOneIncludedItem;
 
     private String includedItemName;
+    private String itemIdentifier;
+
     private Amount includedVatPrice;
     private Amount includedTotalPrice;
     private ExternalAccountingSystem accounting;
@@ -27,6 +29,7 @@ public class ReceiptTest {
 
     @BeforeEach
     void setUp() throws NoSuchItemException {
+        itemIdentifier="hij123";
         includedItemName = "Ice cream";
         includedVatPrice = new Amount(20).scale(.25f);
         includedTotalPrice = new Amount(20).scale(1.25f);
@@ -34,7 +37,7 @@ public class ReceiptTest {
         ExternalSystemCreator externalSystemCreator = new ExternalSystemCreator();
         this.inventory = externalSystemCreator.getExternalInventorySystem();
         this.accounting = externalSystemCreator.getExternalAccountingSystem();
-        this.inventory.addItem("hij123;Ice cream;20:00;25;Ice cream 100 g, chocolate flavour, dairy");
+        this.inventory.addItem(itemIdentifier+";Ice cream;20:00;25;Ice cream 100 g, chocolate flavour, dairy");
         saleDTOWithOneIncludedItem = saleWithOneIncludedItem.scanItem("hij123", inventory);
     }
 

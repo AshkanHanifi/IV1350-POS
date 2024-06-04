@@ -71,6 +71,13 @@ class ViewTest {
     }
 
     @Test
+    void testFakeExecutionDatabaseError() {
+        String expResult="Add 1 item with item id error\n" +
+        "Could not add item";
+        assertTrue(outStream.toString().contains(expResult), "View doesn't correctly inform addition of non existing item");
+    }
+
+    @Test
     void testFakeExecutionIncrementingTotal() {
         ItemDTO firstItem=null;
         ItemDTO secondItem=null;

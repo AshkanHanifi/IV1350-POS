@@ -11,6 +11,7 @@ import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
+import se.kth.iv1350.pos.model.DiscountContainer;
 import se.kth.iv1350.pos.model.Payment;
 import se.kth.iv1350.pos.model.Sale;
 import se.kth.iv1350.pos.util.Amount;
@@ -24,6 +25,8 @@ public class ReceiptPrinterTest {
     private Amount includedTotalPrice;
     private ExternalAccountingSystem accounting;
     private ExternalInventorySystem inventory;
+    private DiscountDatabase discount;
+
 
 
     ByteArrayOutputStream outStream;
@@ -44,6 +47,7 @@ public class ReceiptPrinterTest {
         ExternalSystemCreator externalSystemCreator = new ExternalSystemCreator();
         this.inventory = externalSystemCreator.getExternalInventorySystem();
         this.accounting = externalSystemCreator.getExternalAccountingSystem();
+        this.discount= externalSystemCreator.getDiscountDatabase();
         this.inventory.addItem("hij123;Ice cream;20:00;25;Ice cream 100 g, chocolate flavour, dairy");
         saleWithOneIncludedItem.scanItem("hij123", inventory);
     }
@@ -55,6 +59,7 @@ public class ReceiptPrinterTest {
         includedVatPrice = null;
         inventory = null;
         accounting = null;
+        discount=null;
         saleWithOneIncludedItem = null;
         printer=null;
         outStream = null;
@@ -73,6 +78,31 @@ public class ReceiptPrinterTest {
         String expResult = createReceiptStringForItem(itemAmount, includedItemName, includedTotalPrice);
         expResult = expResult + createReceiptStringForValueField("Discounts", new Amount(0));
         expResult = expResult + createReceiptStringForValueField("Total", includedTotalPrice);
+        expResult = expResult + "VAT: " + includedVatPrice + "\n";
+        expResult = expResult + createReceiptStringForValueField("Cash", paidAmount);
+        expResult = expResult + createReceiptStringForValueField("Change", change);
+        String result = outStream.toString();
+        assertTrue(result.contains(expResult), "Wrong printout.");
+        assertTrue(result.contains(Integer.toString(purchaseTime.getYear())), "Wrong rental year.");
+        assertTrue(result.contains(Integer.toString(purchaseTime.getMonthValue())), "Wrong rental month.");
+        assertTrue(result.contains(Integer.toString(purchaseTime.getDayOfMonth())), "Wrong rental day.");
+        assertTrue(result.contains(Integer.toString(purchaseTime.getHour())), "Wrong rental hour.");
+        assertTrue(result.contains(Integer.toString(purchaseTime.getMinute())), "Wrong rental minute.");
+    }
+
+    @Test
+    void testCreateReceiptStringForSingleItemsWithDiscount(){
+        int itemAmount = 1;
+        Amount paidAmount = new Amount(100);
+        Payment payment = new Payment(paidAmount);
+        DiscountContainer container = saleWithOneIncludedItem.percentageDiscount(discount, "discount");
+        Amount expectedDiscount=includedTotalPrice.scale(container.getDiscountAmount());
+        Amount change = saleWithOneIncludedItem.pay(payment, inventory, accounting);
+        saleWithOneIncludedItem.printReceipt(change, printer);
+        LocalDateTime purchaseTime = LocalDateTime.now();
+        String expResult = createReceiptStringForItem(itemAmount, includedItemName, includedTotalPrice);
+        expResult = expResult + createReceiptStringForValueField("Discounts", expectedDiscount);
+        expResult = expResult + createReceiptStringForValueField("Total", container.getNewTotal());
         expResult = expResult + "VAT: " + includedVatPrice + "\n";
         expResult = expResult + createReceiptStringForValueField("Cash", paidAmount);
         expResult = expResult + createReceiptStringForValueField("Change", change);
