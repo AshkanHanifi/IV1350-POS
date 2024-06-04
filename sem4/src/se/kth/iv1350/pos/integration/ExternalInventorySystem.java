@@ -41,9 +41,6 @@ private static final ExternalInventorySystem externalInventorySystem = new Exter
             throw new InventorySystemException("Server connection failure");
         }
         ItemDTO wantedItem = findItem(itemIdentifier);
-        if(wantedItem==null){
-            throw new NoSuchItemException(itemIdentifier);
-        }
         return wantedItem;
     }
 
@@ -73,13 +70,13 @@ private static final ExternalInventorySystem externalInventorySystem = new Exter
                 new ItemDTO(args[0], args[1], new Amount(Float.valueOf(args[2])), Float.valueOf(args[3]), args[4]));
     }
 
-    private ItemDTO findItem(String itemIdentifier) {
+    private ItemDTO findItem(String itemIdentifier) throws NoSuchItemException {
         for (ItemDTO item : database) {
             if (itemIdentifier.equals(item.getItemIdentifier())) {
                 return item;
             }
         }
-        return null;
+        throw new NoSuchItemException(itemIdentifier);
     }
 
     private void setupItems() {
