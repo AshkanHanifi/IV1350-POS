@@ -7,10 +7,15 @@ public class RandomInheritance extends Random {
     }
 
 
+    /**
+     * Creates an array with random ints
+     * @param arraySize the size of the array
+     * @return an array with random ints as elements
+     */
     public int[] randomArray(int arraySize){
         int[] randomArray=new int[arraySize];
         for(int i=0; i<arraySize;i++){
-            randomArray[i]=nextInt();
+            randomArray[i]=super.nextInt();
         }
         return randomArray;
     }

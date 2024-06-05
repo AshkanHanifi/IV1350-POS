@@ -68,7 +68,7 @@ public class TotalRevenueViewTest {
         Amount change=saleWithTotalOf5.pay(payment,inventory,accounting);
         Amount revenue=paidAmount.minus(change);
         String expResult="Current revenue: " + revenue;
-        assertTrue(outStream.toString().contains(expResult), "Observer not printing correct revenue");
+        assertTrue(outStream.toString().contains(expResult), "Observer not printing correct revenue after 1 sale");
     }
 
     @Test
@@ -81,7 +81,7 @@ public class TotalRevenueViewTest {
         saleWithTotalOf10.addRevenueObserver(new ArrayList<TotalRevenueObserver>(Arrays.asList(observer)));
         saleWithTotalOf10.pay(payment,inventory,accounting);
         String expResult="Current revenue: " + totalCost;
-        assertTrue(outStream.toString().contains(expResult), "Observer not printing correct revenue");
+        assertTrue(outStream.toString().contains(expResult), "Observer not printing correct revenue after 2 sales");
     }
 
 

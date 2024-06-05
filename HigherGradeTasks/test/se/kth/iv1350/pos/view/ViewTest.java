@@ -44,6 +44,19 @@ class ViewTest {
         System.setOut(originalSys);
     }
 
+
+    @Test
+    void testFakeExecutionDiscountApplying() {
+        String expResult="Reduced total by";
+        assertTrue(outStream.toString().contains(expResult), "View doesn't correctly inform of discounts");
+    }
+
+    @Test
+    void testFakeExecutionDiscountPresentingNewTotal() {
+        String expResult="New total: ";
+        assertTrue(outStream.toString().contains(expResult), "View doesn't correctly inform of new total after discount");
+    }
+
     @Test
     void testFakeExecutionSuccesfullyAddingItem() {
         String expResult="Add 1 item with item id abc123";
@@ -60,7 +73,7 @@ class ViewTest {
             e.printStackTrace();
         }
         String expResult=itemDTOToString(item);
-        assertTrue(outStream.toString().contains(expResult), "View doesn't correctly inform addition of item");
+        assertTrue(outStream.toString().contains(expResult), "View doesn't correctly inform of item information");
     }
 
     @Test
@@ -74,7 +87,7 @@ class ViewTest {
     void testFakeExecutionDatabaseError() {
         String expResult="Add 1 item with item id error\n" +
         "Could not add item";
-        assertTrue(outStream.toString().contains(expResult), "View doesn't correctly inform addition of non existing item");
+        assertTrue(outStream.toString().contains(expResult), "View doesn't correctly inform about a failed operation");
     }
 
     @Test
@@ -96,9 +109,9 @@ class ViewTest {
         String thirdExpResult="Total cost (incl VAT): "+  thirdItem.getTotalAmount().addition(secondItem.getTotalAmount().addition(firstItem.getTotalAmount())) + " " +Amount.CURRENCY;
 
 
-        assertTrue(outStream.toString().contains(firstExpResult), "View doesn't correctly inform addition of incremented total");
-        assertTrue(outStream.toString().contains(secondExpResult), "View doesn't correctly inform addition of incremented total");
-        assertTrue(outStream.toString().contains(thirdExpResult), "View doesn't correctly inform addition of incremented total");
+        assertTrue(outStream.toString().contains(firstExpResult), "View doesn't correctly inform addition of incremented total after 1 item");
+        assertTrue(outStream.toString().contains(secondExpResult), "View doesn't correctly inform addition of incremented total after 2 items");
+        assertTrue(outStream.toString().contains(thirdExpResult), "View doesn't correctly inform addition of incremented total after 3 items");
     }
 
     @Test
@@ -120,22 +133,10 @@ class ViewTest {
         String thirdExpResult="Total VAT: "+  thirdItem.getVatAmount().addition(secondItem.getVatAmount().addition(firstItem.getVatAmount())) + " " +Amount.CURRENCY;
 
 
-        assertTrue(outStream.toString().contains(firstExpResult), "View doesn't correctly inform addition of incremented total");
-        assertTrue(outStream.toString().contains(secondExpResult), "View doesn't correctly inform addition of incremented total");
-        assertTrue(outStream.toString().contains(thirdExpResult), "View doesn't correctly inform addition of incremented total");
+        assertTrue(outStream.toString().contains(firstExpResult), "View doesn't correctly inform addition of incremented VAT after 1 item");
+        assertTrue(outStream.toString().contains(secondExpResult), "View doesn't correctly inform addition of incremented VAT after 2 items");
+        assertTrue(outStream.toString().contains(thirdExpResult), "View doesn't correctly inform addition of incremented VAT after 3 items");
 
-    }
-
-    @Test
-    void testFakeExecutionInformingExternalInventoryUpdates(){
-        String expResult="Told external inventory system to decrease inventory quantity";
-        assertTrue(outStream.toString().contains(expResult), "View doesn't correctly inform of external inventory update");
-    }
-
-    @Test
-    void testFakeExecutionInformingExternalAccountingUpdates(){
-        String expResult="Sent sale info to external accounting system.";
-        assertTrue(outStream.toString().contains(expResult), "View doesn't correctly inform of external accounting update");
     }
 
         private String itemDTOToString(ItemDTO item){

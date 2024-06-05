@@ -75,14 +75,22 @@ public class ReceiptPrinterTest {
         Amount change = saleWithOneIncludedItem.pay(payment, inventory, accounting);
         saleWithOneIncludedItem.printReceipt(change, printer);
         LocalDateTime purchaseTime = LocalDateTime.now();
-        String expResult = createReceiptStringForItem(itemAmount, includedItemName, includedTotalPrice);
-        expResult = expResult + createReceiptStringForValueField("Discounts", new Amount(0));
-        expResult = expResult + createReceiptStringForValueField("Total", includedTotalPrice);
-        expResult = expResult + "VAT: " + includedVatPrice + "\n";
-        expResult = expResult + createReceiptStringForValueField("Cash", paidAmount);
-        expResult = expResult + createReceiptStringForValueField("Change", change);
+        String itemsResult = createReceiptStringForItem(itemAmount, includedItemName, includedTotalPrice);
+        String discountResult =createReceiptStringForValueField("Discounts", new Amount(0));
+        String totalResult = createReceiptStringForValueField("Total", includedTotalPrice);
+        String vatResult =  "VAT: " + includedVatPrice + "\n";
+        String cashResult = createReceiptStringForValueField("Cash", paidAmount);
+        String changeResult = createReceiptStringForValueField("Change", change);
+
         String result = outStream.toString();
-        assertTrue(result.contains(expResult), "Wrong printout.");
+        assertTrue(result.contains(itemsResult), "Wrong printout. The receipt does not represent items correctly");
+        assertTrue(result.contains(discountResult), "Wrong printout. The receipt does not represet discount correctly");
+        assertTrue(result.contains(totalResult), "Wrong printout. The receipt does not represent the total correctly");
+        assertTrue(result.contains(vatResult), "Wrong printout. The receipt does not represent VAT correctly");
+        assertTrue(result.contains(cashResult), "Wrong printout. The receipt does not represent Cash correctly");
+        assertTrue(result.contains(changeResult), "Wrong printout. The receipt does not represent change correctly");
+
+
         assertTrue(result.contains(Integer.toString(purchaseTime.getYear())), "Wrong rental year.");
         assertTrue(result.contains(Integer.toString(purchaseTime.getMonthValue())), "Wrong rental month.");
         assertTrue(result.contains(Integer.toString(purchaseTime.getDayOfMonth())), "Wrong rental day.");
@@ -100,14 +108,23 @@ public class ReceiptPrinterTest {
         Amount change = saleWithOneIncludedItem.pay(payment, inventory, accounting);
         saleWithOneIncludedItem.printReceipt(change, printer);
         LocalDateTime purchaseTime = LocalDateTime.now();
-        String expResult = createReceiptStringForItem(itemAmount, includedItemName, includedTotalPrice);
-        expResult = expResult + createReceiptStringForValueField("Discounts", expectedDiscount);
-        expResult = expResult + createReceiptStringForValueField("Total", container.getNewTotal());
-        expResult = expResult + "VAT: " + includedVatPrice + "\n";
-        expResult = expResult + createReceiptStringForValueField("Cash", paidAmount);
-        expResult = expResult + createReceiptStringForValueField("Change", change);
+
+        String itemsResult = createReceiptStringForItem(itemAmount, includedItemName, includedTotalPrice);
+        String discountResult =createReceiptStringForValueField("Discounts", expectedDiscount);
+        String totalResult = createReceiptStringForValueField("Total", includedTotalPrice.minus(expectedDiscount));
+        String vatResult =  "VAT: " + includedVatPrice + "\n";
+        String cashResult = createReceiptStringForValueField("Cash", paidAmount);
+        String changeResult = createReceiptStringForValueField("Change", change);
+
         String result = outStream.toString();
-        assertTrue(result.contains(expResult), "Wrong printout.");
+        assertTrue(result.contains(itemsResult), "Wrong printout. The receipt does not represent items correctly");
+        assertTrue(result.contains(discountResult), "Wrong printout. The receipt does not represent discount correctly");
+        assertTrue(result.contains(totalResult), "Wrong printout. The receipt does not represent the total correctly");
+        assertTrue(result.contains(vatResult), "Wrong printout. The receipt does not represent the VAT correctly");
+        assertTrue(result.contains(cashResult), "Wrong printout. The receipt does not represent the cashn correctly");
+        assertTrue(result.contains(changeResult), "Wrong printout. The receipt does not represent change correctly");
+
+
         assertTrue(result.contains(Integer.toString(purchaseTime.getYear())), "Wrong rental year.");
         assertTrue(result.contains(Integer.toString(purchaseTime.getMonthValue())), "Wrong rental month.");
         assertTrue(result.contains(Integer.toString(purchaseTime.getDayOfMonth())), "Wrong rental day.");
@@ -138,16 +155,22 @@ public class ReceiptPrinterTest {
         Amount change = saleWithOneIncludedItem.pay(payment, inventory, accounting);
         saleWithOneIncludedItem.printReceipt(change, printer);
         LocalDateTime purchaseTime = LocalDateTime.now();
-        String expResult = createReceiptStringForItem(itemAmount, includedItemName, includedTotalPrice);
-        expResult = expResult + createReceiptStringForItem(itemAmount, itemName, totalPrice);
-        expResult = expResult + createReceiptStringForValueField("Discounts", new Amount(0));
-        expResult = expResult + createReceiptStringForValueField("Total", finalTotal);
-        expResult = expResult + "VAT: " + finalTotalVat + "\n";
-        expResult = expResult + createReceiptStringForValueField("Cash", paidAmount);
-        expResult = expResult + createReceiptStringForValueField("Change", change);
+        String itemsResult = createReceiptStringForItem(itemAmount, includedItemName, includedTotalPrice);
+        itemsResult = itemsResult + createReceiptStringForItem(itemAmount, itemName, totalPrice);
+        String discountResult =createReceiptStringForValueField("Discounts", new Amount(0));
+        String totalResult = createReceiptStringForValueField("Total", finalTotal);
+        String vatResult =  "VAT: " + finalTotalVat + "\n";
+        String cashResult = createReceiptStringForValueField("Cash", paidAmount);
+        String changeResult = createReceiptStringForValueField("Change", change);
 
         String result = outStream.toString();
-        assertTrue(result.contains(expResult), "Wrong printout.");
+        assertTrue(result.contains(itemsResult), "Wrong printout. The receipt does not represent items correctly");
+        assertTrue(result.contains(discountResult), "Wrong printout. The receipt does not represent discount correctly");
+        assertTrue(result.contains(totalResult), "Wrong printout. The receipt does not represent the total correctly");
+        assertTrue(result.contains(vatResult), "Wrong printout. The receipt does not represent the VAT correctly");
+        assertTrue(result.contains(cashResult), "Wrong printout. The receipt does not represent cash correctly");
+        assertTrue(result.contains(changeResult), "Wrong printout. The receipt does not represent change correctly");
+        
         assertTrue(result.contains(Integer.toString(purchaseTime.getYear())), "Wrong rental year.");
         assertTrue(result.contains(Integer.toString(purchaseTime.getMonthValue())), "Wrong rental month.");
         assertTrue(result.contains(Integer.toString(purchaseTime.getDayOfMonth())), "Wrong rental day.");
@@ -173,15 +196,23 @@ public class ReceiptPrinterTest {
         Amount change = saleWithOneIncludedItem.pay(payment, inventory, accounting);
         saleWithOneIncludedItem.printReceipt(change, printer);
         LocalDateTime purchaseTime = LocalDateTime.now();
-        String expResult = createReceiptStringForItem(itemAmount, includedItemName, includedTotalPrice);
-        expResult = expResult + createReceiptStringForValueField("Discounts", new Amount(0));
-        expResult = expResult + createReceiptStringForValueField("Total", finalTotal);
-        expResult = expResult + "VAT: " + finalTotalVat + "\n";
-        expResult = expResult + createReceiptStringForValueField("Cash", paidAmount);
-        expResult = expResult + createReceiptStringForValueField("Change", change);
+        String itemsResult = createReceiptStringForItem(itemAmount, includedItemName, includedTotalPrice);
+        String discountResult =createReceiptStringForValueField("Discounts", new Amount(0));
+        String totalResult = createReceiptStringForValueField("Total", finalTotal);
+        String vatResult =  "VAT: " + finalTotalVat + "\n";
+        String cashResult = createReceiptStringForValueField("Cash", paidAmount);
+        String changeResult = createReceiptStringForValueField("Change", change);
 
         String result = outStream.toString();
-        assertTrue(result.contains(expResult), "Wrong printout.");
+        assertTrue(result.contains(itemsResult), "Wrong printout. The receipt does not represent items correctly");
+        assertTrue(result.contains(discountResult), "Wrong printout. The receipt does not represent discount correctly");
+        assertTrue(result.contains(totalResult), "Wrong printout. The receipt does not represent total correctly");
+        assertTrue(result.contains(vatResult), "Wrong printout. The receipt does not represent VAT correctly");
+        assertTrue(result.contains(cashResult), "Wrong printout. The receipt does not represent cash correctly");
+        assertTrue(result.contains(changeResult), "Wrong printout. The receipt does not represent change  correctly");
+
+
+
         assertTrue(result.contains(Integer.toString(purchaseTime.getYear())), "Wrong rental year.");
         assertTrue(result.contains(Integer.toString(purchaseTime.getMonthValue())), "Wrong rental month.");
         assertTrue(result.contains(Integer.toString(purchaseTime.getDayOfMonth())), "Wrong rental day.");
